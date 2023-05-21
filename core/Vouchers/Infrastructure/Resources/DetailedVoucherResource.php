@@ -29,7 +29,7 @@ class DetailedVoucherResource extends JsonResource
             'due_date' => $content->dueDate?->value,
             'type' => $content->invoiceTypeCode->value,
             'notes' => collect($content->notes)->map(fn (Note $note) => $note->value)->toArray(),
-            'currency' => $content->documentCurrencyCode->value,
+            'currency' => $content->documentCurrencyCode?->value ?? 'PEN',
             'supplier' => [
                 'name' => $content->accountingSupplier?->partyLegalEntity?->registrationName?->value,
                 'document' => [
@@ -62,16 +62,16 @@ class DetailedVoucherResource extends JsonResource
                 'other_charges' => $content->legalMonetaryTotal?->chargeTotalAmount?->value ?? 0,
                 'prepaid' => $content->legalMonetaryTotal?->prepaidAmount?->value ?? 0,
                 'igv' => collect($content->taxTotal->taxSubtotals)->filter(function (TaxSubtotal $taxSubtotal) {
-                    return $taxSubtotal->taxCategory->taxScheme->ID->value == '1000';
+                    return $taxSubtotal->taxCategory?->taxScheme?->ID?->value == '1000';
                 })->reduce(fn (float $acc, TaxSubtotal $taxSubtotal) => $acc + $taxSubtotal->taxAmount->value, 0.0),
                 'isc' => collect($content->taxTotal->taxSubtotals)->filter(function (TaxSubtotal $taxSubtotal) {
-                    return $taxSubtotal->taxCategory->taxScheme->ID->value == '2000';
+                    return $taxSubtotal->taxCategory?->taxScheme?->ID?->value == '2000';
                 })->reduce(fn (float $acc, TaxSubtotal $taxSubtotal) => $acc + $taxSubtotal->taxAmount->value, 0.0),
                 'icbper' => collect($content->taxTotal->taxSubtotals)->filter(function (TaxSubtotal $taxSubtotal) {
-                    return $taxSubtotal->taxCategory->taxScheme->ID->value == '7152';
+                    return $taxSubtotal->taxCategory?->taxScheme?->ID?->value == '7152';
                 })->reduce(fn (float $acc, TaxSubtotal $taxSubtotal) => $acc + $taxSubtotal->taxAmount->value, 0.0),
                 'other_tributes' => collect($content->taxTotal->taxSubtotals)->filter(function (TaxSubtotal $taxSubtotal) {
-                    return $taxSubtotal->taxCategory->taxScheme->ID->value == '9999';
+                    return $taxSubtotal->taxCategory?->taxScheme?->ID?->value == '9999';
                 })->reduce(fn (float $acc, TaxSubtotal $taxSubtotal) => $acc + $taxSubtotal->taxAmount->value, 0.0),
             ]
         ];

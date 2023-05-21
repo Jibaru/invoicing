@@ -18,7 +18,7 @@ class Invoice implements Arrayable
     public readonly Time $issueTime;
     public readonly ?Date $dueDate;
     public readonly InvoiceTypeCode $invoiceTypeCode;
-    public readonly DocumentCurrencyCode $documentCurrencyCode;
+    public readonly ?DocumentCurrencyCode $documentCurrencyCode;
 
     public readonly AccountingSupplier $accountingSupplier;
     public readonly AccountingCustomer $accountingCustomer;
@@ -59,7 +59,7 @@ class Invoice implements Arrayable
         Date $issueDate,
         Time $issueTime,
         InvoiceTypeCode $invoiceTypeCode,
-        DocumentCurrencyCode $documentCurrencyCode,
+        ?DocumentCurrencyCode $documentCurrencyCode,
         AccountingSupplier $accountingSupplier,
         AccountingCustomer $accountingCustomer,
         BuyerCustomer $buyerCustomer,
@@ -116,7 +116,7 @@ class Invoice implements Arrayable
             $obj->invoiceTypeCode instanceof InvoiceTypeCode
                 ? $obj->invoiceTypeCode
                 : InvoiceTypeCode::hydrate($obj->invoiceTypeCode),
-            $obj->documentCurrencyCode instanceof DocumentCurrencyCode
+            $obj->documentCurrencyCode instanceof DocumentCurrencyCode || is_null($obj->documentCurrencyCode)
                 ? $obj->documentCurrencyCode
                 : DocumentCurrencyCode::hydrate($obj->documentCurrencyCode),
             $obj->accountingSupplier instanceof AccountingSupplier

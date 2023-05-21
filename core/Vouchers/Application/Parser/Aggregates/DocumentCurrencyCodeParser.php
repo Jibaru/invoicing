@@ -21,8 +21,12 @@ class DocumentCurrencyCodeParser
         $this->cac = $cac;
     }
 
-    public function parse(): DocumentCurrencyCode
+    public function parse(): ?DocumentCurrencyCode
     {
+        if (!$this->cbc->DocumentCurrencyCode) {
+            return null;
+        }
+
         return DocumentCurrencyCode::hydrate(
             [
             'value' => (string) $this->cbc->DocumentCurrencyCode,

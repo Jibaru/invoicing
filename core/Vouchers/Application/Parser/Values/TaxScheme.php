@@ -11,14 +11,14 @@ class TaxScheme implements Arrayable
 {
     use IsArrayable;
 
-    public readonly TaxSchemeID $ID;
-    public readonly TaxSchemeName $name;
-    public readonly TaxSchemeTaxTypeCode $taxTypeCode;
+    public readonly ?TaxSchemeID $ID;
+    public readonly ?TaxSchemeName $name;
+    public readonly ?TaxSchemeTaxTypeCode $taxTypeCode;
 
     public function __construct(
-        TaxSchemeID $ID,
-        TaxSchemeName $name,
-        TaxSchemeTaxTypeCode $taxTypeCode
+        ?TaxSchemeID $ID,
+        ?TaxSchemeName $name,
+        ?TaxSchemeTaxTypeCode $taxTypeCode
     ) {
         $this->ID = $ID;
         $this->name = $name;
@@ -31,7 +31,7 @@ class TaxScheme implements Arrayable
         Filler::withNull($obj, self::class);
 
         return new self(
-            $obj->ID instanceof TaxSchemeID
+            $obj->ID instanceof TaxSchemeID || is_null($obj->ID)
                 ? $obj->ID
                 : TaxSchemeID::hydrate($obj->ID),
             $obj->name instanceof TaxSchemeName || is_null($obj->name)

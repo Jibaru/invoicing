@@ -337,17 +337,17 @@ class CreatePurchaseRecord
     public function register14To19(Invoice $invoice, array &$fields): void
     {
         foreach ($invoice->taxTotal->taxSubtotals as $taxSubtotal) {
-            if ($taxSubtotal->taxCategory->taxScheme->name->value == 'IGV') {
+            if ($taxSubtotal->taxCategory->taxScheme?->name?->value == 'IGV') {
                 $fields['first_tax_base'] = TaxBase::make($taxSubtotal->taxableAmount->value);
                 $fields['first_igv_amount'] = IgvAmount::make($taxSubtotal->taxAmount->value);
             }
 
-            if ($taxSubtotal->taxCategory->taxScheme->name->value == 'EXONERADO') {
+            if ($taxSubtotal->taxCategory->taxScheme?->name?->value == 'EXONERADO') {
                 $fields['second_tax_base'] = TaxBase::make($taxSubtotal->taxableAmount->value);
                 $fields['second_igv_amount'] = IgvAmount::make($taxSubtotal->taxAmount->value);
             }
 
-            if ($taxSubtotal->taxCategory->taxScheme->name->value == 'INAFECTO') {
+            if ($taxSubtotal->taxCategory->taxScheme?->name?->value == 'INAFECTO') {
                 $fields['third_tax_base'] = TaxBase::make($taxSubtotal->taxableAmount->value);
                 $fields['third_igv_amount'] = IgvAmount::make($taxSubtotal->taxAmount->value);
             }

@@ -55,6 +55,7 @@ class Handler extends ExceptionHandler
         if ($e instanceof \Exception) {
             return response([
                 'message' => $e->getMessage(),
+                'trace' => $e->getTrace(),
             ], 400);
         }
 

@@ -548,28 +548,28 @@ class InvoiceParserService implements Parser
                             'schemeName' => (string) $subtotalData->xpath('cac:TaxCategory/cbc:ID')[0]->attributes()->schemeName,
                             ]
                         ) : null,
-                        'taxScheme' => TaxScheme::hydrate(
+                        'taxScheme' => !empty($subtotalData->xpath('cac:TaxCategory/cac:TaxScheme')) ? TaxScheme::hydrate(
                             [
-                            'ID' => TaxSchemeID::hydrate(
+                            'ID' => !empty($subtotalData->xpath('cac:TaxCategory/cac:TaxScheme/cbc:ID')) ? TaxSchemeID::hydrate(
                                 [
                                 'value' => (string) $subtotalData->xpath('cac:TaxCategory/cac:TaxScheme/cbc:ID')[0],
                                 'schemeAgencyName' => (string) $subtotalData->xpath('cac:TaxCategory/cac:TaxScheme/cbc:ID')[0]->attributes()->schemeAgencyName,
                                 'schemeID' => (string) $subtotalData->xpath('cac:TaxCategory/cac:TaxScheme/cbc:ID')[0]->attributes()->schemeID,
                                 'schemeName' => (string) $subtotalData->xpath('cac:TaxCategory/cac:TaxScheme/cbc:ID')[0]->attributes()->schemeName,
                                 ]
-                            ),
-                            'name' => TaxSchemeName::hydrate(
+                            ) : null,
+                            'name' => !empty($subtotalData->xpath('cac:TaxCategory/cac:TaxScheme/cbc:Name')) ? TaxSchemeName::hydrate(
                                 [
                                 'value' => (string) $subtotalData->xpath('cac:TaxCategory/cac:TaxScheme/cbc:Name')[0],
                                 ]
-                            ),
-                            'taxTypeCode' => TaxSchemeTaxTypeCode::hydrate(
+                            ) : null,
+                            'taxTypeCode' => !empty($subtotalData->xpath('cac:TaxCategory/cac:TaxScheme/cbc:TaxTypeCode')) ? TaxSchemeTaxTypeCode::hydrate(
                                 [
                                 'value' => (string) $subtotalData->xpath('cac:TaxCategory/cac:TaxScheme/cbc:TaxTypeCode')[0],
                                 ]
-                            ),
+                            ) : null,
                             ]
-                        )
+                        ) : null
                         ]
                     )
                     ]
@@ -756,12 +756,12 @@ class InvoiceParserService implements Parser
                                 function (SimpleXMLElement $subtotal) {
                                     return TaxSubtotal::hydrate(
                                         [
-                                        'taxableAmount' => Amount::hydrate(
+                                        'taxableAmount' => !empty($subtotal->xpath('cbc:TaxableAmount')) ? Amount::hydrate(
                                             [
                                             'value' => (float) $subtotal->xpath('cbc:TaxableAmount')[0],
                                             'currencyID' => (string) $subtotal->xpath('cbc:TaxableAmount')[0]->attributes()->currencyID,
                                             ]
-                                        ),
+                                        ) : null,
                                         'taxAmount' => Amount::hydrate(
                                             [
                                             'value' => (float) $subtotal->xpath('cbc:TaxAmount')[0],
@@ -778,11 +778,11 @@ class InvoiceParserService implements Parser
                                                 'schemeName' => (string) $subtotal->xpath('cac:TaxCategory/cbc:ID')[0]->attributes()->schemeName,
                                                 ]
                                             ) : null,
-                                            'percent' => Percent::hydrate(
+                                            'percent' => !empty($subtotal->xpath('cac:TaxCategory/cbc:Percent')) ? Percent::hydrate(
                                                 [
                                                 'value' => (float) $subtotal->xpath('cac:TaxCategory/cbc:Percent')[0],
                                                 ]
-                                            ),
+                                            ) : null,
                                             'tierRange' => !empty($subtotal->xpath('cac:TaxCategory/cbc:TierRange'))
                                             ? TierRange::hydrate(
                                                 [
@@ -802,24 +802,24 @@ class InvoiceParserService implements Parser
                                             : null,
                                             'taxScheme' => TaxScheme::hydrate(
                                                 [
-                                                'ID' => TaxSchemeID::hydrate(
+                                                'ID' => !empty($subtotal->xpath('cac:TaxCategory/cac:TaxScheme/cbc:ID')) ? TaxSchemeID::hydrate(
                                                     [
                                                     'value' => (string) $subtotal->xpath('cac:TaxCategory/cac:TaxScheme/cbc:ID')[0],
                                                     'schemeAgencyName' => (string) $subtotal->xpath('cac:TaxCategory/cac:TaxScheme/cbc:ID')[0]->attributes()->schemeAgencyName,
                                                     'schemeID' => (string) $subtotal->xpath('cac:TaxCategory/cac:TaxScheme/cbc:ID')[0]->attributes()->schemeID,
                                                     'schemeName' => (string) $subtotal->xpath('cac:TaxCategory/cac:TaxScheme/cbc:ID')[0]->attributes()->schemeName,
                                                     ]
-                                                ),
-                                                'name' => TaxSchemeName::hydrate(
+                                                ) : null,
+                                                'name' => !empty($subtotal->xpath('cac:TaxCategory/cac:TaxScheme/cbc:Name')) ? TaxSchemeName::hydrate(
                                                     [
                                                     'value' => (string) $subtotal->xpath('cac:TaxCategory/cac:TaxScheme/cbc:Name')[0],
                                                     ]
-                                                ),
-                                                'taxTypeCode' => TaxSchemeTaxTypeCode::hydrate(
+                                                ) : null,
+                                                'taxTypeCode' => !empty($subtotal->xpath('cac:TaxCategory/cac:TaxScheme/cbc:TaxTypeCode')) ? TaxSchemeTaxTypeCode::hydrate(
                                                     [
                                                     'value' => (string) $subtotal->xpath('cac:TaxCategory/cac:TaxScheme/cbc:TaxTypeCode')[0],
                                                     ]
-                                                )
+                                                ) : null
                                                 ]
                                             ),
                                             ]
