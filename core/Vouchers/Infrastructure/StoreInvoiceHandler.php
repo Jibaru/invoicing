@@ -3,10 +3,7 @@
 namespace Core\Vouchers\Infrastructure;
 
 use App\Http\Controllers\Controller;
-use Core\Vouchers\Application\Parser\InvoiceParserService;
-use Core\Vouchers\Application\Parser\Values\Invoice;
 use Core\Vouchers\Application\StoreInvoiceUseCase;
-use Core\Vouchers\Domain\Entities\Factories\VoucherFactory;
 use Core\Vouchers\Infrastructure\Resources\VoucherResource;
 use Exception;
 use Illuminate\Http\Request;
