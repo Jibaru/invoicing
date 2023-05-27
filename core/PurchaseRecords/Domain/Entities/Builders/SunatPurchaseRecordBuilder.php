@@ -125,7 +125,7 @@ class SunatPurchaseRecordBuilder implements PurchaseRecordBuilder
      */
     public function setVoucherTypeFromInvoice(Invoice $invoice): void
     {
-        $fields['voucher_type'] = VoucherType::make($invoice->invoiceTypeCode->value);
+        $this->fields['voucher_type'] = VoucherType::make($invoice->invoiceTypeCode->value);
     }
 
     /**
@@ -384,7 +384,7 @@ class SunatPurchaseRecordBuilder implements PurchaseRecordBuilder
             }
 
             if ($total > $MIN_VALUE_TO_HAS_DETRACTION && $hasDetractionInNotes) {
-                $fields['has_detraction'] = true;
+                $this->fields['has_detraction'] = true;
                 foreach ($invoice->paymentTerms as $paymentTerm) {
                     if (strtolower($paymentTerm->ID->value) == $DETRACTION_NAME) {
                         if (isset($paymentTerm->paymentPercent)) {
