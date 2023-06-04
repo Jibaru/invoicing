@@ -2,6 +2,8 @@
 
 namespace Core\PurchaseRecords\Application\UseCases;
 
+use Core\PurchaseRecords\Application\EventBus\EventBus;
+use Core\PurchaseRecords\Application\Events\PurchaseRecordCreated;
 use Core\PurchaseRecords\Domain\Entities\Factories\SunatPurchaseRecordFactory;
 use Core\PurchaseRecords\Domain\Entities\PurchaseRecord;
 use Core\PurchaseRecords\Domain\Repositories\PurchaseRecordRepository;
@@ -12,13 +14,16 @@ class CreatePurchaseRecordUseCase
 {
     private SunatPurchaseRecordFactory $sunatPurchaseRecordFactory;
     private PurchaseRecordRepository $purchaseRecordRepository;
+    private EventBus $eventBus;
 
     public function __construct(
         SunatPurchaseRecordFactory $sunatPurchaseRecordFactory,
-        PurchaseRecordRepository $purchaseRecordRepository
+        PurchaseRecordRepository $purchaseRecordRepository,
+        EventBus $eventBus
     ) {
         $this->sunatPurchaseRecordFactory = $sunatPurchaseRecordFactory;
         $this->purchaseRecordRepository = $purchaseRecordRepository;
+        $this->eventBus = $eventBus;
     }
 
     /**
@@ -46,6 +51,8 @@ class CreatePurchaseRecordUseCase
         $purchaseRecord = $builder->build();
 
         $this->purchaseRecordRepository->store($purchaseRecord);
+
+        $this->eventBus->dispatch(new PurchaseRecordCreated($purchaseRecord));
 
         return $purchaseRecord;
     }
