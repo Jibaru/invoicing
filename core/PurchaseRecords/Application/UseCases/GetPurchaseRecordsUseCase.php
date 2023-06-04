@@ -30,7 +30,7 @@ class GetPurchaseRecordsUseCase
             $periodSpecification,
         );
 
-        $totalPages = $this->purchaseRecordRepository->getTotalPages($paginate);
+        $totalPages = $this->purchaseRecordRepository->getTotalPages($paginate, $periodSpecification);
 
         return [
             $purchaseRecordDTOS,
