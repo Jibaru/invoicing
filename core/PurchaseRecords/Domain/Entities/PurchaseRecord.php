@@ -196,4 +196,28 @@ class PurchaseRecord
             'updated_at' => $this->updatedAt->toDateTimeString(),
         ];
     }
+
+    public function supplierInformation(): array
+    {
+        return [
+            $this->supplierDocumentType,
+            $this->supplierDocumentDenomination,
+            $this->supplierDocumentNumber,
+        ];
+    }
+
+    public function id(): PurchaseRecordID
+    {
+        return $this->ID;
+    }
+
+    public function period(): Period
+    {
+        return $this->period;
+    }
+
+    public function voucherID(): VoucherID
+    {
+        return $this->voucherID;
+    }
 }
