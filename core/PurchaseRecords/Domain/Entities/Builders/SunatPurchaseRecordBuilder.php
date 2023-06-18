@@ -21,6 +21,7 @@ use Core\PurchaseRecords\Domain\Entities\ValueObjects\UniqueOperationCode;
 use Core\PurchaseRecords\Domain\Entities\ValueObjects\VoucherNumber;
 use Core\PurchaseRecords\Domain\Entities\ValueObjects\VoucherSeries;
 use Core\PurchaseRecords\Domain\Entities\ValueObjects\VoucherType;
+use Core\PurchaseRecords\Domain\Repositories\PurchaseRecordRepository;
 use Core\Vouchers\Application\Parser\Values\Invoice;
 use Core\Vouchers\Domain\Entities\ValueObjects\VoucherID;
 use Exception;
@@ -29,14 +30,16 @@ class SunatPurchaseRecordBuilder implements PurchaseRecordBuilder
 {
     private array $fields;
 
-    public function __construct(VoucherID $voucherID)
+    public function __construct(VoucherID $voucherID, bool $hasBudget, PurchaseRecordRepository $purchaseRecordRepository)
     {
         $this->fields = [
             'id' => PurchaseRecordID::empty(),
             'voucher_id' => $voucherID,
             'period' => null,
             'unique_operation_code' => UniqueOperationCode::make(),
-            'correlative_accounting_entry_number' => CorrelativeAccountingEntryNumber::make(),
+            'correlative_accounting_entry_number' => new CorrelativeAccountingEntryNumber(
+                $purchaseRecordRepository->nextEntryNumber($hasBudget)
+            ),
             'issue_date' => null,
             'due_date' => null,
             'voucher_type' => null,
@@ -79,6 +82,7 @@ class SunatPurchaseRecordBuilder implements PurchaseRecordBuilder
             'payable_amount' => false,
             'has_detraction' => false,
             'detraction_percentage' => null,
+            'has_budget' => $hasBudget,
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
         ];
@@ -92,6 +96,17 @@ class SunatPurchaseRecordBuilder implements PurchaseRecordBuilder
     public function setPeriodToNow(): void
     {
         $this->fields['period'] = Period::now();
+    }
+
+    /**
+     * Field 01
+     *
+     * @param Invoice $invoice
+     * @return void
+     */
+    public function setPeriodFromInvoice(Invoice $invoice): void
+    {
+        $this->fields['period'] = Period::fromIssueDate($invoice->issueDate->value);
     }
 
     /**
@@ -396,6 +411,11 @@ class SunatPurchaseRecordBuilder implements PurchaseRecordBuilder
                 }
             }
         }
+    }
+
+    public function setHasBudget(bool $hasBudget): void
+    {
+        $this->fields['has_budget'] = $hasBudget;
     }
 
     public function build(): PurchaseRecord

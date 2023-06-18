@@ -14,6 +14,7 @@ interface PurchaseRecordBuilder
      * @return void
      */
     public function setPeriodToNow(): void;
+    public function setPeriodFromInvoice(Invoice $invoice): void;
 
     /**
      * Field 04
@@ -109,6 +110,7 @@ interface PurchaseRecordBuilder
      * @return void
      */
     public function setDetractionInformationFromInvoice(Invoice $invoice): void;
+    public function setHasBudget(bool $hasBudget): void;
 
     public function build(): PurchaseRecord;
 }
