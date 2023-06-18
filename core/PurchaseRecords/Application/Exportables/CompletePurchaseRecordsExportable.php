@@ -42,6 +42,7 @@ class CompletePurchaseRecordsExportable implements PurchaseRecordsExportable
     public function headings(): array
     {
         return [
+            'CORRELATIVO ASIENTO CONTABLE',
             'PERIODO',
             'CODIGO ÚNICO DE OPERACIÓN',
             'FECHA EMISIÓN',
@@ -78,6 +79,7 @@ class CompletePurchaseRecordsExportable implements PurchaseRecordsExportable
     public function map($purchaseRecord): array
     {
         return [
+            $purchaseRecord->correlativeAccountingEntryNumber,
             $purchaseRecord->period,
             $purchaseRecord->uniqueOperationCode,
             $purchaseRecord->issueDate,
