@@ -28,15 +28,16 @@ class CreatePurchaseRecordUseCase
 
     /**
      * @param Voucher $voucher
+     * @param bool $hasBudget
      * @return PurchaseRecord
      * @throws Exception
      */
-    public function __invoke(Voucher $voucher): PurchaseRecord
+    public function __invoke(Voucher $voucher, bool $hasBudget): PurchaseRecord
     {
         $invoice = $voucher->parseContent();
 
-        $builder = $this->sunatPurchaseRecordFactory->makeBuilder($voucher->id);
-        $builder->setPeriodToNow();
+        $builder = $this->sunatPurchaseRecordFactory->makeBuilder($voucher->id, $hasBudget);
+        $builder->setPeriodFromInvoice($invoice);
         $builder->setIssueDateFromInvoice($invoice);
         $builder->setVoucherTypeFromInvoice($invoice);
         $builder->setDueDateFromInvoice($invoice);
@@ -48,6 +49,7 @@ class CreatePurchaseRecordUseCase
         $builder->setTaxBasesAndIgvAmountsFromInvoice($invoice);
         $builder->setPayableAmountFromInvoice($invoice);
         $builder->setDetractionInformationFromInvoice($invoice);
+        $builder->setHasBudget($hasBudget);
         $purchaseRecord = $builder->build();
 
         $this->purchaseRecordRepository->store($purchaseRecord);

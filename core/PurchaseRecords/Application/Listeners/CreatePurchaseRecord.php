@@ -24,6 +24,9 @@ class CreatePurchaseRecord
     {
         $voucher = $event->voucher;
 
-        $this->createPurchaseRecordUseCase->__invoke($voucher);
+        $this->createPurchaseRecordUseCase->__invoke(
+            $voucher,
+            $event->hasBudget,
+        );
     }
 }
