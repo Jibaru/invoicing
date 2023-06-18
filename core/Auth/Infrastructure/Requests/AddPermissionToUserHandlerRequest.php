@@ -16,7 +16,7 @@ class AddPermissionToUserHandlerRequest extends FormRequest
         return [
             'name' => [
                 'required',
-                'in:manage-inventory,manage-users,manage-vouchers,manage-purchase-records',
+                'in:manage-inventory,manage-users,manage-vouchers,manage-purchase-records,manage-budget-allocations',
             ],
         ];
     }
