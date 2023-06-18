@@ -2,6 +2,7 @@
 
 namespace Core\Vouchers\Application;
 
+use Core\BudgetAllocation\Domain\Entities\ValueObjects\CostCenterCode;
 use Core\Vouchers\Application\EventBus\EventBus;
 use Core\Vouchers\Application\Events\VoucherCreated;
 use Core\Vouchers\Application\Parser\Factories\ParserFactory;
@@ -31,11 +32,15 @@ class StoreInvoiceUseCase
 
     /**
      * @param string $xmlContents
+     * @param CostCenterCode $costCenterCode
+     * @param string $hasBudget
      * @return Voucher
      * @throws Exception
      */
     public function __invoke(
-        string $xmlContents
+        string $xmlContents,
+        CostCenterCode $costCenterCode,
+        string $hasBudget,
     ): Voucher {
         $parser = $this->parserFactory->makeInvoiceParser($xmlContents);
         $invoice = $parser->parse();
@@ -43,7 +48,7 @@ class StoreInvoiceUseCase
 
         $this->voucherRepository->store($voucher);
 
-        $this->eventBus->dispatch(new VoucherCreated($voucher));
+        $this->eventBus->dispatch(new VoucherCreated($voucher, $costCenterCode, $hasBudget));
 
         return $voucher;
     }

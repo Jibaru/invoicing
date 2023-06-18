@@ -3,6 +3,7 @@
 namespace Core\Vouchers\Infrastructure;
 
 use App\Http\Controllers\Controller;
+use Core\BudgetAllocation\Domain\Entities\ValueObjects\CostCenterCode;
 use Core\Vouchers\Application\StoreInvoiceUseCase;
 use Core\Vouchers\Infrastructure\Resources\VoucherResource;
 use Exception;
@@ -21,13 +22,19 @@ class StoreInvoiceHandler extends Controller
     public function __invoke(Request $request): Response
     {
         $files = $request->file('file');
+        $costCenterCode = $request->input('cost_center_code');
+        $hasBudget = (bool) $request->input('has_budget');
 
         $vouchers = [];
 
         try {
             foreach ($files as $file) {
                 $xmlContents = file_get_contents($file);
-                $vouchers[] = $this->storeInvoiceUseCase->__invoke($xmlContents);
+                $vouchers[] = $this->storeInvoiceUseCase->__invoke(
+                    $xmlContents,
+                    new CostCenterCode($costCenterCode),
+                    $hasBudget,
+                );
             }
         } catch (Exception $exception) {
             return response(
