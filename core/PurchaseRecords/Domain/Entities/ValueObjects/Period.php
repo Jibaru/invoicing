@@ -28,6 +28,27 @@ class Period
         );
     }
 
+    public static function fromIssueDate(string $issueDate): self
+    {
+        [$year, $month, $day] = explode('-', $issueDate);
+
+        return new self(
+            (int) $month,
+            (int) $year
+        );
+    }
+
+    public static function fromPurchaseRecordFormat(string $period): self
+    {
+        $year = substr($period, 0, 4);
+        $month = substr($period, 4, 2);
+
+        return new self(
+            (int) $month,
+            (int) $year,
+        );
+    }
+
     public function toPurchaseRecordFormat(): string
     {
         $month = str_pad($this->month, 2, '0', STR_PAD_LEFT);
