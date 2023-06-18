@@ -6,6 +6,12 @@ use Core\Auth\Domain\Repositories\PermissionRepository;
 use Core\Auth\Domain\Repositories\UserRepository;
 use Core\Auth\Infrastructure\Repositories\MySqlPermissionRepository;
 use Core\Auth\Infrastructure\Repositories\MySqlUserRepository;
+use Core\BudgetAllocation\Domain\Repositories\CostCenterBudgetExpenseRepository;
+use Core\BudgetAllocation\Domain\Repositories\CostCenterBudgetRepository;
+use Core\BudgetAllocation\Domain\Repositories\CostCenterRepository;
+use Core\BudgetAllocation\Infrastructure\Repositories\MySqlCostCenterBudgetExpenseRepository;
+use Core\BudgetAllocation\Infrastructure\Repositories\MySqlCostCenterBudgetRepository;
+use Core\BudgetAllocation\Infrastructure\Repositories\MySqlCostCenterRepository;
 use Core\Inventory\Domain\Repositories\SupplierItemRepository;
 use Core\Inventory\Domain\Repositories\SupplierRepository;
 use Core\Inventory\Infrastructure\Repositories\MySqlSupplierItemRepository;
@@ -32,6 +38,9 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(PurchaseRecordsExportable::class, CompletePurchaseRecordsExportable::class);
         $this->app->bind(SupplierRepository::class, MySqlSupplierRepository::class);
         $this->app->bind(SupplierItemRepository::class, MySqlSupplierItemRepository::class);
+        $this->app->bind(CostCenterRepository::class, MySqlCostCenterRepository::class);
+        $this->app->bind(CostCenterBudgetRepository::class, MySqlCostCenterBudgetRepository::class);
+        $this->app->bind(CostCenterBudgetExpenseRepository::class, MySqlCostCenterBudgetExpenseRepository::class);
     }
 
     /**
