@@ -61,6 +61,7 @@ return new class extends Migration
             $table->boolean('has_retention')->default(false);
             $table->decimal('retention_percentage', 14, 2)->nullable();
             $table->string('payment_mean_account', 100)->nullable();
+            $table->boolean('has_budget')->default(false);
             $table->uuid('voucher_id')->unique();
             $table->foreign('voucher_id')
                 ->on('vouchers')
