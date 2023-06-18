@@ -2,6 +2,7 @@
 
 namespace Core\PurchaseRecords\Domain\Dtos;
 
+use Core\PurchaseRecords\Domain\Entities\ValueObjects\CorrelativeAccountingEntryNumber;
 use stdClass;
 
 class PurchaseRecordDTO
@@ -30,31 +31,6 @@ class PurchaseRecordDTO
     public readonly bool $hasDetraction;
     public readonly ?float $detractionPercentage;
 
-    /**
-     * @param string $id
-     * @param string $period
-     * @param string $uniqueOperationCode
-     * @param string $correlativeAccountingEntryNumber
-     * @param string $issueDate
-     * @param string|null $dueDate
-     * @param string $voucherType
-     * @param string|null $voucherSeries
-     * @param string|null $duaOrDsiIssueYear
-     * @param string $voucherNumber
-     * @param string|null $dailyOperationsTotalAmount
-     * @param string|null $supplierDocumentType
-     * @param string|null $supplierDocumentNumber
-     * @param string|null $supplierDocumentDenomination
-     * @param float|null $firstTaxBase
-     * @param float|null $firstIgvAmount
-     * @param float|null $secondTaxBase
-     * @param float|null $secondIgvAmount
-     * @param float|null $thirdTaxBase
-     * @param float|null $thirdIgvAmount
-     * @param float $payableAmount
-     * @param bool $hasDetraction
-     * @param float|null $detractionPercentage
-     */
     public function __construct(
         string $id,
         string $period,
@@ -79,11 +55,13 @@ class PurchaseRecordDTO
         float $payableAmount,
         bool $hasDetraction,
         ?float $detractionPercentage,
+        bool $hasBudget,
     ) {
         $this->id = $id;
         $this->period = $period;
         $this->uniqueOperationCode = $uniqueOperationCode;
-        $this->correlativeAccountingEntryNumber = $correlativeAccountingEntryNumber;
+        $this->correlativeAccountingEntryNumber =
+            (new CorrelativeAccountingEntryNumber($correlativeAccountingEntryNumber))->format($hasBudget);
         $this->issueDate = $issueDate;
         $this->dueDate = $dueDate;
         $this->voucherType = $voucherType;
@@ -133,6 +111,7 @@ class PurchaseRecordDTO
             $fields->payable_amount,
             $fields->has_detraction,
             $fields->detraction_percentage,
+            $fields->has_budget,
         );
     }
 }

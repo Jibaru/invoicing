@@ -3,6 +3,8 @@
 namespace Core\PurchaseRecords\Domain\Entities;
 
 use Carbon\Carbon;
+use Core\BudgetAllocation\Domain\Entities\ValueObjects\Currency;
+use Core\BudgetAllocation\Domain\Entities\ValueObjects\Money;
 use Core\PurchaseRecords\Domain\Entities\ValueObjects\CorrelativeAccountingEntryNumber;
 use Core\PurchaseRecords\Domain\Entities\ValueObjects\DailyOperationsTotalAmount;
 use Core\PurchaseRecords\Domain\Entities\ValueObjects\DayMonthYearDate;
@@ -72,7 +74,7 @@ class PurchaseRecord
     private SummaryAmount $payableAmount;
     private bool $hasDetraction;
     private ?Detraction $detractionPercentage;
-
+    private bool $hasBudget;
     private VoucherID $voucherID;
     private Carbon $createdAt;
     private Carbon $updatedAt;
@@ -102,6 +104,7 @@ class PurchaseRecord
         SummaryAmount $payableAmount,
         bool $hasDetraction,
         ?Detraction $detractionPercentage,
+        bool $hasBudget,
         Carbon $createdAt,
         Carbon $updatedAt
     ) {
@@ -129,12 +132,17 @@ class PurchaseRecord
         $this->payableAmount = $payableAmount;
         $this->hasDetraction = $hasDetraction;
         $this->detractionPercentage = $detractionPercentage;
+        $this->hasBudget = $hasBudget;
         $this->createdAt = $createdAt;
         $this->updatedAt = $updatedAt;
     }
 
     public static function hydrate(array|stdClass $fields): self
     {
+        if (is_object($fields) && get_class($fields) === 'stdClass') {
+            $fields = get_object_vars($fields);
+        }
+
         return new self(
             $fields['id'],
             $fields['voucher_id'],
@@ -160,6 +168,7 @@ class PurchaseRecord
             $fields['payable_amount'],
             $fields['has_detraction'],
             $fields['detraction_percentage'],
+            $fields['has_budget'],
             $fields['created_at'],
             $fields['updated_at'],
         );
@@ -192,6 +201,7 @@ class PurchaseRecord
             'payable_amount' => $this->payableAmount->value,
             'has_detraction' => $this->hasDetraction,
             'detraction_percentage' => $this->detractionPercentage?->percentage,
+            'has_budget' => $this->hasBudget,
             'created_at' => $this->createdAt->toDateTimeString(),
             'updated_at' => $this->updatedAt->toDateTimeString(),
         ];
