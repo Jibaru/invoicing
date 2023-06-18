@@ -42,6 +42,17 @@ class DayMonthYearDate
         );
     }
 
+    public static function fromPurchaseRecordFormat(string $date): self
+    {
+        [$day, $month, $year] = explode('/', $date);
+
+        return new self(
+            (int) $day,
+            (int) $month,
+            (int) $year
+        );
+    }
+
     public function betweenPeriods(Period $from, Period $to): bool
     {
         return (
