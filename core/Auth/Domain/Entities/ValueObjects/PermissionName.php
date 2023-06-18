@@ -8,6 +8,7 @@ class PermissionName
     const MANAGE_VOUCHERS = 'manage-vouchers';
     const MANAGE_PURCHASE_RECORDS = 'manage-purchase-records';
     const MANAGE_INVENTORY = 'manage-inventory';
+    const MANAGE_BUDGET_ALLOCATIONS = 'manage-budget-allocations';
 
     public readonly string $value;
 
