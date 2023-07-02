@@ -43,6 +43,8 @@ class CompletePurchaseRecordsExportable implements PurchaseRecordsExportable
     {
         return [
             'CORRELATIVO ASIENTO CONTABLE',
+            'CÓDIGO DE GASTO',
+            'CÓDIGO DE CENTRO DE COSTOS',
             'PERIODO',
             'CODIGO ÚNICO DE OPERACIÓN',
             'FECHA EMISIÓN',
@@ -64,6 +66,7 @@ class CompletePurchaseRecordsExportable implements PurchaseRecordsExportable
             'MONTO PAGADO',
             'TIENE DETRACCIÓN',
             'PORCENTAJE DETRACCIÓN',
+            'TIPO DETRACCIÓN',
         ];
     }
 
@@ -80,6 +83,8 @@ class CompletePurchaseRecordsExportable implements PurchaseRecordsExportable
     {
         return [
             $purchaseRecord->correlativeAccountingEntryNumber,
+            $purchaseRecord->costCenterBudgetExpenseCode,
+            $purchaseRecord->costCenterCode,
             $purchaseRecord->period,
             $purchaseRecord->uniqueOperationCode,
             $purchaseRecord->issueDate,
@@ -101,6 +106,7 @@ class CompletePurchaseRecordsExportable implements PurchaseRecordsExportable
             $purchaseRecord->payableAmount ?? '0',
             $purchaseRecord->hasDetraction ? 'SI' : 'NO',
             $purchaseRecord->detractionPercentage ?? '0',
+            $purchaseRecord->detractionType ?? '-'
         ];
     }
 }

@@ -59,15 +59,15 @@ class PurchaseRecordsExportable implements
     public function columnFormats(): array
     {
         return [
-            'I' => NumberFormat::FORMAT_NUMBER_00,
-            'M' => NumberFormat::FORMAT_NUMBER_00,
-            'N' => NumberFormat::FORMAT_NUMBER_00,
-            'O' => NumberFormat::FORMAT_NUMBER_00,
             'P' => NumberFormat::FORMAT_NUMBER_00,
             'Q' => NumberFormat::FORMAT_NUMBER_00,
             'R' => NumberFormat::FORMAT_NUMBER_00,
             'S' => NumberFormat::FORMAT_NUMBER_00,
+            'T' => NumberFormat::FORMAT_NUMBER_00,
             'U' => NumberFormat::FORMAT_NUMBER_00,
+            'V' => NumberFormat::FORMAT_NUMBER_00,
+            'W' => NumberFormat::FORMAT_NUMBER_00,
+            'X' => NumberFormat::FORMAT_NUMBER_00,
         ];
     }
 
@@ -75,7 +75,7 @@ class PurchaseRecordsExportable implements
     {
         return [
             AfterSheet::class => function (AfterSheet $event) {
-                $event->sheet->getStyle('A1:U1')->applyFromArray(
+                $event->sheet->getStyle('A1:Y1')->applyFromArray(
                     [
                         'font' => array(
                             'name' => 'Calibri',
@@ -85,7 +85,7 @@ class PurchaseRecordsExportable implements
                     ]
                 );
 
-                $event->sheet->getStyle('A1:U100')->applyFromArray([
+                $event->sheet->getStyle('A1:Y100')->applyFromArray([
                     'alignment' => [
                         'horizontal' => Alignment::HORIZONTAL_CENTER,
                         'vertical' => Alignment::VERTICAL_CENTER,
