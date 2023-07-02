@@ -2,12 +2,15 @@
 
 namespace Core\PurchaseRecords\Domain\Dtos;
 
+use Core\BudgetAllocation\Domain\Entities\ValueObjects\CostCenterBudgetExpenseCode;
 use Core\PurchaseRecords\Domain\Entities\ValueObjects\CorrelativeAccountingEntryNumber;
 use stdClass;
 
 class PurchaseRecordDTO
 {
     public readonly string $id;
+    public readonly string $costCenterBudgetExpenseCode;
+    public readonly string $costCenterCode;
     public readonly string $period;
     public readonly string $uniqueOperationCode;
     public readonly string $correlativeAccountingEntryNumber;
@@ -30,9 +33,12 @@ class PurchaseRecordDTO
     public readonly float $payableAmount;
     public readonly bool $hasDetraction;
     public readonly ?float $detractionPercentage;
+    public readonly ?string $detractionType;
 
     public function __construct(
         string $id,
+        string $costCenterBudgetExpenseCode,
+        string $costCenterCode,
         string $period,
         string $uniqueOperationCode,
         string $correlativeAccountingEntryNumber,
@@ -58,6 +64,8 @@ class PurchaseRecordDTO
         bool $hasBudget,
     ) {
         $this->id = $id;
+        $this->costCenterCode = $costCenterCode;
+        $this->costCenterBudgetExpenseCode = $costCenterBudgetExpenseCode;
         $this->period = $period;
         $this->uniqueOperationCode = $uniqueOperationCode;
         $this->correlativeAccountingEntryNumber =
@@ -81,14 +89,38 @@ class PurchaseRecordDTO
         $this->payableAmount = $payableAmount;
         $this->hasDetraction = $hasDetraction;
         $this->detractionPercentage = $detractionPercentage;
+
+        if ($this->detractionPercentage) {
+            if ($this->detractionPercentage == 4) {
+                $this->detractionType = 'Contratos de construcción';
+            } elseif ($this->detractionPercentage == 10) {
+                $this->detractionType = 'Transporte de bienes';
+            } elseif ($this->detractionPercentage == 12) {
+                $this->detractionType = 'Otros servicios empresariales';
+            } else {
+                $this->detractionType = null;
+            }
+        } else {
+            $this->detractionType = null;
+        }
     }
 
     public static function hydrate(array|stdClass $fields): self
     {
         $fields = (object) $fields;
 
+        if ($fields->has_detraction) {
+            $costCenterBudgetExpenseCode =
+                (CostCenterBudgetExpenseCode::asDetraction($fields->cost_center_budget_expense_code))->value;
+        } else {
+            $costCenterBudgetExpenseCode =
+                (CostCenterBudgetExpenseCode::asGood($fields->cost_center_budget_expense_code))->value;
+        }
+
         return new self(
             $fields->id,
+            $costCenterBudgetExpenseCode,
+            $fields->cost_center_code,
             $fields->period,
             $fields->unique_operation_code,
             $fields->correlative_accounting_entry_number,

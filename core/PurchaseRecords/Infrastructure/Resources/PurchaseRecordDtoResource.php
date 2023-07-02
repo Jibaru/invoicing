@@ -21,6 +21,8 @@ class PurchaseRecordDtoResource extends JsonResource
             'id' => $this->resource->id,
             'period' => $this->resource->period,
             'unique_operation_code' => $this->resource->uniqueOperationCode,
+            'cost_center_budget_expense_code' => $this->resource->costCenterBudgetExpenseCode,
+            'cost_center_code' => $this->resource->costCenterCode,
             'correlative_accounting_entry_number' => $this->resource->correlativeAccountingEntryNumber,
             'issue_date' => $this->resource->issueDate,
             'due_date' => $this->resource->dueDate,

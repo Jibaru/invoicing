@@ -41,6 +41,29 @@ class MySqlPurchaseRecordRepository implements PurchaseRecordRepository
     public function getPurchaseRecordsRows(int $page, ?int $perPage = null, ?Specification $specification = null): array
     {
         $builder = DB::table('purchase_records')
+            ->select([
+                'purchase_records.*',
+                'cost_centers.code as cost_center_code',
+                'cost_center_budget_expenses.code as cost_center_budget_expense_code',
+            ])
+            ->join(
+                'cost_center_budget_expenses',
+                'cost_center_budget_expenses.voucher_id',
+                '=',
+                'purchase_records.voucher_id'
+            )
+            ->join(
+                'cost_center_budgets',
+                'cost_center_budgets.id',
+                '=',
+                'cost_center_budget_expenses.cost_center_budget_id'
+            )
+            ->join(
+                'cost_centers',
+                'cost_centers.id',
+                '=',
+                'cost_center_budgets.cost_center_id'
+            )
             ->orderByDesc('created_at');
 
         if ($specification instanceof PeriodSpecification) {
